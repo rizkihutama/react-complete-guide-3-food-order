@@ -1,9 +1,9 @@
-// import './App.css'
+import Header from './components/Layouts/Header.jsx';
 
 function App() {
   return (
     <>
-      <h2>Let's get started!</h2>
+      <Header />
     </>
   );
 }
