@@ -12,8 +12,7 @@
   font-weight: bold;
 }
 
-.button:hover,
-.button:active {
+.button:where(:hover, :active) {
   background-color: #2c0d00;
 }
 
@@ -31,8 +30,7 @@
   font-weight: bold;
 }
 
-.button:hover .badge,
-.button:active .badge {
+.button:where(:hover, :active) .badge {
   background-color: #92320c;
 }
 
