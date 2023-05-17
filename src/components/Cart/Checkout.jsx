@@ -9,13 +9,6 @@ const Checkout = (props) => {
     address: '',
   };
 
-  const defaultInputKeystrokes = {
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-  };
-
   const defaultTouchedValues = {
     name: false,
     email: false,
@@ -39,7 +32,6 @@ const Checkout = (props) => {
 
   const {
     inputValues: inputValues,
-    inputKeystrokes: inputKeystrokes,
     isInputTouched: isInputTouched,
     isInputValid: isInputValid,
     setIsInputValid,
@@ -69,7 +61,7 @@ const Checkout = (props) => {
       } = isInputTouched;
 
       setIsInputValid({
-        ...inputValues,
+        ...isInputValid,
         name: nameInputValue.trim() !== '',
         email:
           emailInputValue.trim() !== '' &&
@@ -90,7 +82,7 @@ const Checkout = (props) => {
       } = isInputInvalid;
 
       setIsInputInvalid({
-        ...inputValues,
+        ...isInputInvalid,
         name: !nameIsInvalid && nameIsTouched,
         email: !emailIsInvalid && emailIsTouched,
         phone: !phoneIsInvalid && phoneIsTouched,
@@ -99,44 +91,98 @@ const Checkout = (props) => {
     }
   );
 
+  let isFormValid =
+    isInputValid.name &&
+    isInputValid.email &&
+    isInputValid.phone &&
+    isInputValid.email;
+
   const formSubmitHandler = (e) => {
     e.preventDefault();
+
+    console.log(isInputValid.name);
+
+    if (!isFormValid) return;
+
+    resetAllInputState();
   };
 
-  const validateInputPhoneNumber = (e) => {
-    e.target.value = e.target.value.replace(/\D/g, '');
-  };
+  const inputNameClasses = isInputInvalid.name
+    ? `${classes['form-control']} ${classes.invalid}`
+    : classes['form-control'];
+
+  const inputEmailClasses = isInputInvalid.email
+    ? `${classes['form-control']} ${classes.invalid}`
+    : classes['form-control'];
+
+  const inputPhoneClasses = isInputInvalid.phone
+    ? `${classes['form-control']} ${classes.invalid}`
+    : classes['form-control'];
+
+  const inputAddressClasses = isInputInvalid.address
+    ? `${classes['form-control']} ${classes.invalid}`
+    : classes['form-control'];
 
   return (
-    <form onSubmit={formSubmitHandler}>
-      <div className={classes['form-control']}>
+    <form onSubmit={formSubmitHandler} className={classes['form-checkout']}>
+      <div className={inputNameClasses}>
         <label htmlFor='name'>Name</label>
         <input
           type='text'
           name='name'
           id='name'
-          // onInput={}
           onChange={inputChangeHandler}
           onBlur={inputBlurHandler}
           value={inputValues.name}
         />
       </div>
-      <div className={classes['form-control']}>
+      <div className={inputEmailClasses}>
         <label htmlFor='email'>Email</label>
-        <input type='email' name='email' id='email' />
+        <input
+          type='email'
+          name='email'
+          id='email'
+          onChange={inputChangeHandler}
+          onBlur={inputBlurHandler}
+          value={inputValues.email}
+        />
       </div>
-      <div className={classes['form-control']}>
+      <div className={inputPhoneClasses}>
         <label htmlFor='phone'>Phone</label>
-        <input type='tel' name='phone' id='phone' maxLength='13' />
+        <input
+          type='tel'
+          name='phone'
+          id='phone'
+          maxLength='13'
+          onChange={inputChangeHandler}
+          onBlur={inputBlurHandler}
+          value={inputValues.phone}
+        />
       </div>
-      <div className={classes['form-control']}>
+      <div className={inputAddressClasses}>
         <label htmlFor='address'>Address</label>
-        <textarea name='address' id='address' cols='30' rows='10'></textarea>
+        <textarea
+          name='address'
+          id='address'
+          cols='30'
+          rows='10'
+          onChange={inputChangeHandler}
+          onBlur={inputBlurHandler}
+          value={inputValues.address}
+        ></textarea>
       </div>
-      <button type='button' onClick={props.onClose}>
-        Cancel
-      </button>
-      <button type='submit'>Confirm</button>
+      <div className={classes.actions}>
+        <button
+          type='button'
+          className={classes['button--alt']}
+          onClick={props.onClose}
+        >
+          Cancel
+        </button>
+        <button type='submit' className={classes.button}>
+          Confirm
+        </button>
+      </div>
     </form>
   );
 };

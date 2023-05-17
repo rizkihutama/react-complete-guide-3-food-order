@@ -2,16 +2,12 @@ import { useEffect, useState } from 'react';
 
 const useMultipleInput = (
   defaultInputValues,
-  defaultInputKeystrokes,
   defaultTouchedValues,
   defaultInputIsValid,
   defaultInputIsInvalid,
   validateInputs
 ) => {
   const [inputValues, setInputValues] = useState(defaultInputValues);
-  const [inputKeystrokes, setInputKeystrokes] = useState(
-    defaultInputKeystrokes
-  );
   const [isInputTouched, setIsInputTouched] = useState(defaultTouchedValues);
   const [isInputValid, setIsInputValid] = useState(defaultInputIsValid);
   const [isInputInvalid, setIsInputInvalid] = useState(defaultInputIsInvalid);
@@ -19,11 +15,6 @@ const useMultipleInput = (
   useEffect(() => {
     validateInputs();
   }, [inputValues, isInputTouched]);
-
-  const inputTypeHandler = (event) => {
-    const { name, value } = event.target;
-    setInputKeystrokes({ ...inputValues, [name]: value });
-  };
 
   const inputChangeHandler = (event) => {
     const { name, value } = event.target;
@@ -37,7 +28,6 @@ const useMultipleInput = (
 
   const resetAllInputState = () => {
     setInputValues(defaultInputValues);
-    setInputKeystrokes(defaultInputKeystrokes);
     setIsInputTouched(defaultTouchedValues);
     setIsInputValid(defaultInputIsValid);
     setIsInputInvalid(defaultInputIsInvalid);
@@ -45,13 +35,11 @@ const useMultipleInput = (
 
   return {
     inputValues,
-    inputKeystrokes,
     isInputTouched,
     isInputValid,
     setIsInputValid,
     isInputInvalid,
     setIsInputInvalid,
-    inputTypeHandler,
     inputChangeHandler,
     inputBlurHandler,
     resetAllInputState,

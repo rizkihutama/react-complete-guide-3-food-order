@@ -1,9 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
 
-*, 
-*::before, 
+*,
+*::before,
 *::after {
   box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  max-width: 0.75rem;
+  margin-left: 5rem;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 1rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 1rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666;
 }
 
 html {
