@@ -24,6 +24,10 @@ const Cart = (props) => {
     cartCtx.addItem({ ...item, amount: 1 });
   };
 
+  const onConfirmHandler = (data) => {
+    console.log(data);
+  };
+
   const cartItems = (
     <>
       <ul className={classes['cart-items']}>
@@ -63,7 +67,9 @@ const Cart = (props) => {
   return (
     <Modal onBackGroundClick={props.onClose}>
       {cartItems}
-      {isCheckout && <Checkout onClose={props.onClose} />}
+      {isCheckout && (
+        <Checkout onClose={props.onClose} onConfirm={onConfirmHandler} />
+      )}
       {!isCheckout && modalAction}
     </Modal>
   );

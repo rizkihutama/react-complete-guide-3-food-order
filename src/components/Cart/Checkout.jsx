@@ -1,7 +1,12 @@
+import { useContext } from 'react';
 import classes from './Checkout.module.css';
 import useMultipleInputs from '../../hooks/use-multiple-input';
+import CartContext from '../../store/cart-context';
 
 const Checkout = (props) => {
+  const cartCtx = useContext(CartContext);
+  const hasItems = cartCtx.items.length > 0;
+
   const defaultInputValues = {
     name: '',
     email: '',
@@ -60,6 +65,13 @@ const Checkout = (props) => {
         address: addressIsTouched,
       } = isInputTouched;
 
+      const {
+        name: nameIsValid,
+        email: emailIsValid,
+        phone: phoneIsValid,
+        address: addressIsValid,
+      } = isInputValid;
+
       setIsInputValid({
         ...isInputValid,
         name: nameInputValue.trim() !== '',
@@ -74,19 +86,12 @@ const Checkout = (props) => {
         address: addressInputValue.trim() !== '',
       });
 
-      const {
-        name: nameIsInvalid,
-        email: emailIsInvalid,
-        phone: phoneIsInvalid,
-        address: addressIsInvalid,
-      } = isInputInvalid;
-
       setIsInputInvalid({
         ...isInputInvalid,
-        name: !nameIsInvalid && nameIsTouched,
-        email: !emailIsInvalid && emailIsTouched,
-        phone: !phoneIsInvalid && phoneIsTouched,
-        address: !addressIsInvalid && addressIsTouched,
+        name: !nameIsValid || (!nameIsValid && nameIsTouched),
+        email: !emailIsValid || (!emailIsValid && emailIsTouched),
+        phone: !phoneIsValid || (!phoneIsValid && phoneIsTouched),
+        address: !addressIsValid || (!addressIsValid && addressIsTouched),
       });
     }
   );
@@ -100,9 +105,9 @@ const Checkout = (props) => {
   const formSubmitHandler = (e) => {
     e.preventDefault();
 
-    console.log(isInputValid.name);
-
     if (!isFormValid) return;
+
+    props.onConfirm(inputValues);
 
     resetAllInputState();
   };
@@ -179,9 +184,11 @@ const Checkout = (props) => {
         >
           Cancel
         </button>
-        <button type='submit' className={classes.button}>
-          Confirm
-        </button>
+        {hasItems && (
+          <button type='submit' className={classes.button}>
+            Confirm
+          </button>
+        )}
       </div>
     </form>
   );
