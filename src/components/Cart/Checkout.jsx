@@ -108,8 +108,6 @@ const Checkout = (props) => {
     if (!isFormValid) return;
 
     props.onConfirm(inputValues);
-
-    resetAllInputState();
   };
 
   const inputNameClasses = isInputInvalid.name

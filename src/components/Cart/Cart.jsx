@@ -7,6 +7,8 @@ import Checkout from './Checkout';
 
 const Cart = (props) => {
   const [isCheckout, setIsCheckout] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [isDidSubmit, setIsDidSubmit] = useState(false);
   const cartCtx = useContext(CartContext);
 
   const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
@@ -24,8 +26,31 @@ const Cart = (props) => {
     cartCtx.addItem({ ...item, amount: 1 });
   };
 
-  const onConfirmHandler = (data) => {
-    console.log(data);
+  const onConfirmHandler = async (userData) => {
+    setIsSubmit(true);
+
+    const res = await fetch(
+      'https://react-http-d08ab-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user: userData,
+          orderItems: cartCtx,
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      return alert('Something went wrong!');
+    }
+
+    setIsSubmit(false);
+    setIsDidSubmit(true);
+    cartCtx.clearItem();
   };
 
   const cartItems = (
@@ -64,13 +89,30 @@ const Cart = (props) => {
     </>
   );
 
-  return (
-    <Modal onBackGroundClick={props.onClose}>
+  const modalContent = (
+    <>
       {cartItems}
       {isCheckout && (
         <Checkout onClose={props.onClose} onConfirm={onConfirmHandler} />
       )}
       {!isCheckout && modalAction}
+    </>
+  );
+
+  return (
+    <Modal onBackGroundClick={props.onClose}>
+      {isSubmit && isDidSubmit && <p>Loading...</p>}
+      {!isSubmit && !isDidSubmit && modalContent}
+      {!isSubmit && isDidSubmit && (
+        <>
+          <p>Successfuly Order</p>
+          <div className={classes.actions}>
+            <button className={classes.button} onClick={props.onClose}>
+              Close
+            </button>
+          </div>
+        </>
+      )}
     </Modal>
   );
 };
